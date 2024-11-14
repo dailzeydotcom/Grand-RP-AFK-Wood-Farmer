@@ -1,4 +1,4 @@
-Hello guys, this is a simple AFK Wood farm Script for Grand RR.
+Hello guys, this is a simple AFK Wood farm Script for Grand RP.
 
 Requirements:
 - You have to be Level 3 as Wood farmer, because of the Task that changes with the level
