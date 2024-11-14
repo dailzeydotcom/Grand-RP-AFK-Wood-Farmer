@@ -5,8 +5,11 @@ Requirements:
 - The minimap have to be in the left lower corner as usual and the points have to be yellow as usual
 
 Install Python library:
+
 pip install ImageGrab
+
 pip install opencv-python
+
 pip install pynput
 
 And of course you need to have python, i use 3.11.9 and it works so maybe go with it ( https://www.python.org/downloads/ )
