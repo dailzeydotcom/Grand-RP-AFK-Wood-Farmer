@@ -4,13 +4,15 @@ import cv2
 import time
 from pynput import keyboard
 from pynput.keyboard import Controller, Key
+from pynput.mouse import Controller as MouseController
 
-# Tastensimulator initialisieren
+# Tastensimulator und Maussimulator initialisieren
 keyboard_controller = Controller()
+mouse_controller = MouseController()
 script_running = True  # Globale Variable zum Beenden des Skripts
 
 # Definiere den Bereich des Screens, der die Minikarte unten links umfasst
-bbox = (0, 480, 320, 1080)  # Angepasster Bereich basierend auf deinem Screenshot
+bbox = (0, 860, 320, 1080)  # Angepasster Bereich basierend auf deinem Screenshot
 
 # Definiere die RGB-Werte für Gelb und eine Toleranz
 yellow_rgb = [232, 240, 39]  # RGB-Wert des gelben Punktes, basierend auf deinem Screenshot
@@ -49,10 +51,17 @@ def hold_key_without_sprint(key, duration):
     time.sleep(duration)
     keyboard_controller.release(key)
 
-# Funktion für das Rückwärts- und Seitwärtsbewegen bei Festhängen
-def move_backwards_and_side():
-    hold_key_without_sprint('s', 0.3)  # Lange Rückwärtsbewegung
-    hold_key_without_sprint('d', 0.3)  # Lange Seitwärtsbewegung
+# Funktion für das Rückwärts- und Seitwärtsbewegen bei Festhängen und Kamera-Drehung
+def move_backwards_and_side_with_rotation():
+    # Rückwärts- und Seitwärtsbewegung
+    hold_key_without_sprint('s', 0.3)
+    hold_key_without_sprint('d', 0.3)
+
+    # Drehe die Kamera um 180 Grad mit mehreren kleinen Bewegungen
+    total_rotation_steps = 40  # Anzahl der kleinen Schritte für 180-Grad-Drehung
+    for _ in range(total_rotation_steps):
+        mouse_controller.move(15, 0)  # Bewegt die Maus leicht nach rechts
+        time.sleep(0.01)  # Kleine Pause für gleichmäßige Bewegung
 
 # Funktion zum Beenden des Skripts bei Drücken von ESC
 def on_press(key):
@@ -106,8 +115,8 @@ while script_running:
             if stuck_start_time is None:
                 stuck_start_time = time.time()
             elif time.time() - stuck_start_time > stuck_duration_threshold:
-                print("Blockade erkannt! Bewege rückwärts und zur Seite.")
-                move_backwards_and_side()
+                print("Blockade erkannt! Bewege rückwärts und zur Seite mit 180-Grad-Drehung.")
+                move_backwards_and_side_with_rotation()
                 stuck_start_time = None  # Reset der Blockadezeit
         else:
             stuck_start_time = None  # Setzt stuck_start_time zurück, wenn sich die Distanz ändert
